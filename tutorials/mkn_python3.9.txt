@@ -1,0 +1,26 @@
+# First we need to install mkn to use the scripts in tick/sh/
+$ cd $HOME
+$ git clone https://github.com/mkn/mkn
+$ cd mkn
+$ make nix
+$ cd $HOME
+$ export PATH="$HOME/mkn:$PATH"
+$ mkn -v
+
+# Clone tick from claudio-ICL
+$ git clone git@github.com:claudio-ICL/tick.git
+$ cd tick
+$ git checkout --track origin/hawkes-random-time-change 
+
+# Create conda env `tickm`; this will be using python 3.9
+$ conda env create -f ./tickm.yml
+$ conda develop -n tickm .
+$ conda activate tickm
+
+# Setup
+# make sure you are on the branch hawkes-random-time-change so that we canm test qq plots
+$ ./sh/mkn.sh # build libraries
+
+# Run examples of QQ plots
+$ python examples/qq_plot_hawkes_exp.py 
+# This should open a figure qith qq plots showing a very good fit
