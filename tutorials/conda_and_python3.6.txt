@@ -1,0 +1,32 @@
+git clone git@github.com:claudio-ICL/tick.git
+
+#This is required for cereal!
+git submodule update --init
+
+conda env create -f ./tickf.yml
+
+conda develop -n tickf .
+
+conda activate tickf
+
+sudo apt-get install swig
+
+sudo apt-get install -y autotools-dev automake gawk bison flex
+
+conda install dill  # Not sure about this; might not be needed. 
+
+# Check that you are using the right python in the conda env just created
+
+Test: python -c "import dill;" # This must be successfull
+
+# Change to the branch where I developed the calc of compensators
+git checkout --track origin/hawkes-random-time-change
+
+# Make sure that you are using the conda env `tickf`
+
+python setup.py build_ext --inplace
+
+Test: python -c "import tick;"
+
+Test: python ./examples/qq_plot_hawkes_exp.py  
+# This should display a figure with qq plots showing a very good fit
