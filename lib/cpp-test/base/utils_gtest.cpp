@@ -96,8 +96,8 @@ TEST_P(ParallelTest, ReduceSum) {
 
   MapFunctorsUnary m{n};
 
-  const long result = parallel_map_reduce(GetParam(), m.data.size(), plus_f,
-                                          &MapFunctorsUnary::Set, &m);
+  const long result =
+      parallel_map_reduce(GetParam(), m.data.size(), plus_f, &MapFunctorsUnary::Set, &m);
 
   const long na = n - 1;
   EXPECT_EQ((na * (na + 1)) / 2, result);
@@ -108,8 +108,8 @@ TEST_P(ParallelTest, ReduceSumAdditive) {
 
   MapFunctorsUnary m{n};
 
-  const long result = parallel_map_additive_reduce(GetParam(), m.data.size(),
-                                                   &MapFunctorsUnary::Set, &m);
+  const long result =
+      parallel_map_additive_reduce(GetParam(), m.data.size(), &MapFunctorsUnary::Set, &m);
 
   const long na = n - 1;
   EXPECT_EQ((na * (na + 1)) / 2, result);
@@ -141,8 +141,7 @@ TEST_P(ParallelTest, MapFibo) {
   CalcFibo c{};
   auto result = parallel_map(GetParam(), 100, &CalcFibo::DoIt, &c);
 
-  std::vector<unsigned long> resultAsVector{result->data(),
-                                            result->data() + result->size()};
+  std::vector<unsigned long> resultAsVector{result->data(), result->data() + result->size()};
   std::vector<unsigned long> expected(resultAsVector.size(), 0);
 
   {
@@ -156,8 +155,7 @@ TEST_P(ParallelTest, MapFibo) {
 
 struct ComplexFunctors {
   std::complex<double> DoIt(unsigned long i) {
-    return std::proj(
-               std::sqrt(std::cos(std::sin(std::complex<double>(0, 1))))) *
+    return std::proj(std::sqrt(std::cos(std::sin(std::complex<double>(0, 1))))) *
            std::exp(std::complex<double>(0.0, 1.0) * std::acos(-1));
   }
 };
@@ -171,8 +169,7 @@ TEST_P(ParallelTest, MapComplex) {
 
   {
     std::size_t i = 0;
-    std::generate(std::begin(expected), std::end(expected),
-                  [&] { return c.DoIt(i++); });
+    std::generate(std::begin(expected), std::end(expected), [&] { return c.DoIt(i++); });
   }
 
   EXPECT_EQ(expected, result);
@@ -189,8 +186,7 @@ struct ExceptionThrowerBadIndex {
 TEST_P(ParallelTest, ExceptionThrow) {
   ExceptionThrower e{};
 
-  EXPECT_THROW(parallel_run(GetParam(), 1000, &ExceptionThrower::DoIt, &e),
-               std::runtime_error);
+  EXPECT_THROW(parallel_run(GetParam(), 1000, &ExceptionThrower::DoIt, &e), std::runtime_error);
 }
 
 TEST_P(ParallelTest, ExceptionThrowBadIndex) {
@@ -199,8 +195,7 @@ TEST_P(ParallelTest, ExceptionThrowBadIndex) {
   ArrayDouble arrayDouble(1);
   arrayDouble.fill(1.0);
 
-  EXPECT_THROW(parallel_run(GetParam(), 1000, &ExceptionThrowerBadIndex::DoIt,
-                            &e, arrayDouble),
+  EXPECT_THROW(parallel_run(GetParam(), 1000, &ExceptionThrowerBadIndex::DoIt, &e, arrayDouble),
                std::exception);
 }
 
@@ -219,27 +214,21 @@ TEST_P(ParallelTest, MapArray) {
   auto f = [](ulong i, ArrayDouble &s) { s[i] = i; };
   auto redux = [](ArrayDouble &r, ArrayDouble &s) { r.mult_incr(s, 1.0); };
 
-  EXPECT_NO_THROW(
-      parallel_map_array<ArrayDouble>(GetParam(), N, redux, f, data));
+  EXPECT_NO_THROW(parallel_map_array<ArrayDouble>(GetParam(), N, redux, f, data));
 
   {
     std::vector<double> expected(1000);
 
     std::size_t i = 0;
-    std::generate(std::begin(expected), std::end(expected),
-                  [&i]() { return i++; });
+    std::generate(std::begin(expected), std::end(expected), [&i]() { return i++; });
 
-    EXPECT_TRUE(
-        std::equal(std::begin(expected), std::end(expected), data.data()));
+    EXPECT_TRUE(std::equal(std::begin(expected), std::end(expected), data.data()));
   }
 }
 
-INSTANTIATE_TEST_CASE_P(AllParallelTests, ParallelTest,
-                        ::testing::Values(1, 2, 4, 8, 16));
+INSTANTIATE_TEST_SUITE_P(AllParallelTests, ParallelTest, ::testing::Values(1, 2, 4, 8, 16));
 
-TEST(ParallelTest, CPUCount) {
-  ASSERT_GE(std::thread::hardware_concurrency(), 2u);
-}
+TEST(ParallelTest, CPUCount) { ASSERT_GE(std::thread::hardware_concurrency(), 2u); }
 
 TEST(ParallelTest, TooManyThreads) {
   CalcFibo c;
@@ -340,8 +329,7 @@ TEST(DebugTest, PrintSparseArray) {
 #ifdef ADD_MAIN
 int main(int argc, char **argv) {
 #ifdef _WIN32
-  std::cout << "Skipping tests in " __FILE__ << " on windows due to strangeness"
-            << std::endl;
+  std::cout << "Skipping tests in " __FILE__ << " on windows due to strangeness" << std::endl;
 #else
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();

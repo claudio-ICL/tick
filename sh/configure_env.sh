@@ -129,7 +129,7 @@ else
 
   PY_INCS="${PINC}:${PNIC}"
 
-  LDARGS="$($PCONF --ldflags)"
+  LDARGS="$($PCONF --ldflags --embed)"
   B_PATH="."
   [ -z "$LIB_POSTEXT" ] && LIB_POSTEXT="${LIB_POSTFIX##*.}"
 fi
