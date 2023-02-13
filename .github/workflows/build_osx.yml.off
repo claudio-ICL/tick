@@ -1,5 +1,5 @@
 
-name: Build Tick on Ubuntu
+name: Build Tick on OSX
 
 on:
   push:
@@ -10,12 +10,12 @@ on:
 env:
   TICK_DEBUG: 0
   TICK_WERROR: 0
-  MKN_GCC_PREFERRED: 1
+
 
 jobs:
   build:
     name: Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     strategy:
       fail-fast: false
@@ -40,7 +40,7 @@ jobs:
     - name: info
       run: |
         python3 -V
-        gcc -v
+        clang -v
         swig -version
 
     - name: pip
@@ -50,7 +50,7 @@ jobs:
 
     - name: build
       run: |
-        curl -Lo mkn https://github.com/mkn/mkn/releases/download/latest/mkn_nix
+        curl -Lo mkn https://github.com/mkn/mkn/releases/download/latest/mkn_osx
         chmod +x mkn
         PATH=$PWD:$PATH KLOG=3 ./sh/mkn.sh
 
@@ -60,4 +60,4 @@ jobs:
 
     - name: pytest
       run: |
-        python3 setup.py pytest
+        python -m unittest discover -v . "*_test.py"

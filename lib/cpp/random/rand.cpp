@@ -42,7 +42,7 @@ int Rand::uniform_int(int a, int b) {
   return uniform_int_dist(generator, p);
 }
 
-ulong Rand::uniform_int(ulong a, ulong b) {
+ulong Rand::uniform_ulong(ulong a, ulong b) {
   std::uniform_int_distribution<ulong>::param_type p(a, b);
   return uniform_ulong_dist(generator, p);
 }
@@ -90,8 +90,8 @@ ulong Rand::discrete(ArrayDouble probabilities) {
 int Rand::get_seed() const { return seed; }
 
 void Rand::reseed(const int seed) {
-  // If seed is negative with create one with random device
-  // Otherwise we use the given seed
+  // If seed is negative,  we use random device
+  // Otherwise, we use the given seed
   if (seed < 0) {
     // This random device creates random numbers based on machine state
     std::random_device r;
@@ -100,8 +100,7 @@ void Rand::reseed(const int seed) {
     std::seed_seq seed_seq{r(), r(), r(), r(), r(), r(), r(), r()};
     generator = std::mt19937_64(seed_seq);
   } else {
-    unsigned int useed = seed < 0 ? 0 : static_cast<unsigned int>(seed);
-    generator = std::mt19937_64(useed);
+    generator = std::mt19937_64(seed);
   }
 
   Rand::seed = seed;
