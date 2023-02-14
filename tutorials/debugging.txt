@@ -1,0 +1,24 @@
+1. 
+```
+export MKN_DBG="gdb -batch -ex run -ex bt --args" # put htis into your .bashrc file
+```
+2.
+```
+[KLOG=3] MKN_O=0 MKN_G=9 ./sh/mkn.sh # Add to this the modules that you care about in order to re-build only those
+```
+
+3.
+```
+[KLOG=3] DEBUG=1 ./sh/gtest.sh <gtest-file-to-execute>
+```
+Example: `KLOG=3 DEBUG=1 ./sh/gtest.sh cpp-test/base/time_func_gtest.cpp`
+
+4. # If needed
+```
+export LD_LIBRARY_PATH=${HOME}/.maiken/repo/google/test/c++11/bin/build:${HOME}/projects/tick/tick/array/build:${HOME}/projects/tick/tick/base/build:${HOME}/projects/tick/tick/base_model/build:${HOME}/projects/tick/tick/survival/build:${HOME}/projects/tick/tick/linear_model/build:${HOME}/projects/tick/tick/robust/build:${HOME}/projects/tick/tick/hawkes/model/build:${HOME}/projects/tick/tick/hawkes/inference/build:${HOME}/projects/tick/tick/random/build:${HOME}/projects/tick/tick/hawkes/simulation/build:${HOME}/projects/tick/tick/prox/build:${HOME}/projects/tick/tick/solver/build:.:${HOME}/anaconda3/envs/tickm/lib 
+```
+
+5. To get a gdb prompt:
+```
+ gdb --args lib/bin/gtest/tick 
+```
